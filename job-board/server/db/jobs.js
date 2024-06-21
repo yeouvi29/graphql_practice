@@ -1,10 +1,14 @@
-import { connection } from './connection.js';
-import { generateId } from './ids.js';
+import { connection } from "./connection.js";
+import { generateId } from "./ids.js";
 
-const getJobTable = () => connection.table('job');
+const getJobTable = () => connection.table("job");
 
 export async function getJobs() {
   return await getJobTable().select();
+}
+
+export async function getJobsByCompany(companyId) {
+  return await getJobTable().select().where({ companyId });
 }
 
 export async function getJob(id) {
@@ -37,7 +41,10 @@ export async function updateJob({ id, title, description }) {
   if (!job) {
     throw new Error(`Job not found: ${id}`);
   }
-  const updatedFields = { title, description };
+  const updatedFields = {
+    title: title || job.title,
+    description: description || job.description,
+  };
   await getJobTable().update(updatedFields).where({ id });
   return { ...job, ...updatedFields };
 }
