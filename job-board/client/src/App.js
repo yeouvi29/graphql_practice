@@ -25,7 +25,7 @@ function App() {
 
   return (
     <>
-      <NavBar user={user || true} onLogout={handleLogout} />
+      <NavBar user={user} onLogout={handleLogout} />
       <main className="section">
         <Routes>
           <Route index path="/" element={<HomePage />} />
