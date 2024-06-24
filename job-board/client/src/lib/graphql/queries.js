@@ -58,7 +58,7 @@ const jobDetailFragment = gql`
     }
     description
   }
-`
+`;
 
 export const jobByIdQuery = gql`
   query JobById($id: ID!) {
@@ -70,19 +70,33 @@ export const jobByIdQuery = gql`
 `;
 
 export const companyByIdQuery = gql`
-    query CompanyById($id: ID!) {
-      company(id: $id) {
+  query CompanyById($id: ID!) {
+    company(id: $id) {
+      id
+      name
+      description
+      jobs {
         id
-        name
-        description
-        jobs {
-          id
-          date
-          title
-        }
+        date
+        title
       }
     }
-  `;
+  }
+`;
+
+export const jobsQuery = gql`
+  query Jobs {
+    jobs {
+      id
+      date
+      title
+      company {
+        id
+        name
+      }
+    }
+  }
+`;
 
 export async function createJob({ title, description }) {
   const mutation = gql`
@@ -143,7 +157,6 @@ export async function deleteJob(id) {
 }
 
 // export async function getCompany(id) {
-  
 
 //   const { data } = await apolloClient.query({ query: companyByIdQuery, variables: { id } });
 //   return data.company;
@@ -156,23 +169,12 @@ export async function deleteJob(id) {
 //   return job;
 // }
 
-export async function getJobs() {
-  const query = gql`
-    query Jobs {
-      jobs {
-        id
-        date
-        title
-        company {
-          id
-          name
-        }
-      }
-    }
-  `;
-
-  const {
-    data: { jobs },
-  } = await apolloClient.query({ query, fetchPolicy: "cache-first" });
-  return jobs;
-}
+// export async function getJobs() {
+//   const {
+//     data: { jobs },
+//   } = await apolloClient.query({
+//     query: jobsQuery,
+//     fetchPolicy: "cache-first",
+//   });
+//   return jobs;
+// }
